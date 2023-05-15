@@ -1,26 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./app.css";
 import Task from "./Task";
 import TaskForm from "./TaskForm";
 import TaskHookForm from "./TaskHookForm";
 import PeopleForm from "./PeopleForm";
 import { initialTasks, initialTeam } from "./data";
+import { ToastContainer, toast } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [team, setTeam] = useState(initialTeam);
+  const gorevTamamlandı = () =>
+    toast.success("Görev tamamlanmıştır.", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      });
+  const kisiEklendi = () =>
+    toast.info("Kişi eklenmiştir.", {
+      position: "top-right",
+      autoClose: 2000,
+      closeOnClick: true,
+      progress: undefined,
+      theme: "dark",
+    });
+    const gorevEklendi = () =>
+    toast.info("Görev eklenmiştir.", {
+      position: "top-right",
+      autoClose: 2000,
+      closeOnClick: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  // useEffect(() => {
+  //   console.log(tasks);
+  // }, [tasks]);
 
   function handleTaskSubmit(yeniTask) {
-    setTasks([yeniTask, ...tasks])
+    setTasks([yeniTask, ...tasks]);
+    gorevEklendi();
   }
 
   function handlePeopleSubmit(yeniKisi) {
-    setTeam([...team, yeniKisi])
+    setTeam([...team, yeniKisi]);
+    kisiEklendi();
   }
 
   function handleComplete(id) {
-    console.log("tamamlama fonksiyonunu buraya yazın")
+    const completedTask = tasks.find((task) => task.id == id);
+    completedTask.status = "yapıldı";
+    setTasks([...tasks], completedTask);
+    gorevTamamlandı();
+    console.log(tasks);
   }
 
   return (
@@ -59,7 +98,18 @@ function App() {
           </div>
         </div>
       </div>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }
